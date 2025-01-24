@@ -1,2 +1,2 @@
 # video-utils
-utility function for video editing 
+The Video Utils repository contains utility functions for performing various video processing tasks.

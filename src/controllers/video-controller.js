@@ -1,6 +1,11 @@
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
+const fs = require('fs').promises;
 const logger = require('../utils/logger');
+const VideoService = require('../services/video-service');
+
+const ApplicationError = require('../utils/error/application-error');
 
 const VideoModel = require('../models/video');
 
@@ -38,10 +43,10 @@ const uploadVideo = async (req, res, next) => {
     });
 
     logger.info(`Video uploaded successfully: ${videoId}`);
-    res.status(201).json({ message: 'Video uploaded successfully', videoId });
+    return res.status(201).json({ message: 'Video uploaded successfully', videoId });
   } catch (error) {
     logger.error('Video upload failed', { error });
-    next(error);
+    return next(error);
   }
 };
 
@@ -58,7 +63,7 @@ const getVideo = async (req, res, next) => {
       id, originalName, size, createdAt,
     } = video;
 
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Video retrieved successfully',
       video: {
         id, originalName, size: convertBytes(size), createdAt,
@@ -66,14 +71,14 @@ const getVideo = async (req, res, next) => {
     });
   } catch (error) {
     logger.error('Failed to retrieve video', { error });
-    next(error);
+    return next(error);
   }
 };
 
 const listVideos = async (req, res, next) => {
   try {
     const videos = await VideoModel.listVideos();
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Videos retrieved successfully',
       videos: videos.map(({
         id, originalName, size, createdAt,
@@ -83,7 +88,54 @@ const listVideos = async (req, res, next) => {
     });
   } catch (error) {
     logger.error('Failed to retrieve videos', { error });
-    next(error);
+    return next(error);
+  }
+};
+
+const trimVideo = async (req, res, next) => {
+  try {
+    const { start, end } = req.body;
+    const { videoId } = req.params;
+
+    if (!videoId) {
+      return res.status(400).json({ status: 'error', error: 'Missing VideoId!' });
+    }
+
+    if (start === undefined || end === undefined || start >= end) {
+      return res.status(400).json({ status: 'error', error: 'Invalid trim values' });
+    }
+
+    const video = await VideoModel.getVideoById(videoId);
+    if (!video) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+
+    const outputFilename = `trimmed-${Date.now()}-${path.basename(video.path)}`;
+    const outputPath = path.join(__dirname, process.env.UPLOAD_DIR, outputFilename);
+
+    const trimmedVideoPath = await VideoService.trimVideo(video.path, outputPath, start, end)
+      .catch((error) => {
+        logger.error('FFmpeg processing failed', { error });
+        throw new ApplicationError('Video processing failed');
+      });
+
+    const fileStats = await fs.stat(trimmedVideoPath);
+
+    const trimmedVideoId = uuidv4();
+    await VideoModel.createVideo({
+      id: trimmedVideoId,
+      filename: outputFilename,
+      originalName: `Trimmed-${path.basename(video.originalName)}`,
+      path: trimmedVideoPath,
+      parentId: videoId,
+      size: fileStats?.size,
+    });
+
+    logger.info(`Video trimmed successfully: ${trimmedVideoId}`);
+    return res.status(201).json({ message: 'Video trimmed successfully', videoId: trimmedVideoId });
+  } catch (error) {
+    logger.error('Video trimming failed', { error });
+    return next(error);
   }
 };
 
@@ -91,4 +143,5 @@ module.exports = {
   uploadVideo,
   listVideos,
   getVideo,
+  trimVideo,
 };

@@ -16,6 +16,11 @@ router.post(
   videoController.uploadVideo,
 );
 
+router.post(
+  '/:videoId/trim',
+  videoController.trimVideo,
+);
+
 router.get(
   '/',
   videoController.listVideos,

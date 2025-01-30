@@ -17,6 +17,25 @@ const getVideoDuration = (filePath) => new Promise((resolve, reject) => {
   });
 });
 
+const trimVideo = async (inputPath, outputPath, start, end) => {
+  try {
+    await new Promise((resolve, reject) => {
+      ffmpeg(inputPath)
+        .setStartTime(start)
+        .setDuration(end - start)
+        .output(outputPath)
+        .on('end', resolve)
+        .on('error', reject)
+        .run();
+    });
+    return outputPath;
+  } catch (error) {
+    logger.error('Video trimming failed', { error });
+    throw error;
+  }
+};
+
 module.exports = {
   getVideoDuration,
+  trimVideo,
 };

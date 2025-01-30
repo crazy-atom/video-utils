@@ -1,7 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
-const { getVideoDuration } = require('../src/services/video-service');
-const { trimVideo } = require('../src/services/video-service');
+const { getVideoDuration, trimVideo } = require('../src/services/video-processing-service');
 
 describe('Video trim tests', () => {
   const trimVideoPath = 'out/bunny_trim.mp4';

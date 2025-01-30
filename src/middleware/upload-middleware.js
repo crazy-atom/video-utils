@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
-const { getVideoDuration } = require('../services/video-service');
+const { getVideoDuration } = require('../services/video-processing-service');
 const { validateMaxVideoSize, validateMinVideoSize } = require('../utils/validation/validate-video-file-size');
 const validateVideoDuration = require('../utils/validation/validate-video-duration');
 

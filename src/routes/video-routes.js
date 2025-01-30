@@ -21,6 +21,11 @@ router.post(
   videoController.trimVideo,
 );
 
+router.post(
+  '/merge',
+  videoController.mergeVideos,
+);
+
 router.get(
   '/',
   videoController.listVideos,

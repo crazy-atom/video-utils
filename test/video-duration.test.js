@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { getVideoDuration } = require('../src/services/video-service');
+const { getVideoDuration } = require('../src/services/video-processing-service');
 
 describe('Video duration tests', () => {
   test('should return correct duration', async () => {

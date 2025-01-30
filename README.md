@@ -53,10 +53,6 @@ npm install
 ### **3. Configure Environment Variables**
 - Create a .env file from the provided .env.example template.
 - Then, install the required dependencies:
-```sh
-npm install
-```
-
 
 ### **4. Run Tests 🧪**
 - To test the application and check test coverage, use:

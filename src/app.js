@@ -8,6 +8,8 @@ const { createHttpTerminator } = require('http-terminator');
 const errorMiddleware = require('./middleware/error-middleware');
 
 const healthRoute = require('./routes/health-route');
+const videoRoutes = require('./routes/video-routes');
+
 const logger = require('./utils/logger');
 
 const app = express();
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/health', healthRoute);
+app.use('/videos', videoRoutes);
+
 app.use(errorMiddleware);
 
 const server = app.listen(process.env.PORT, () => {

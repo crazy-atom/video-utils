@@ -90,6 +90,19 @@ class VideoModel {
       });
     });
   }
+
+  clearAllVideos() {
+    return new Promise((resolve, reject) => {
+      const query = 'DELETE FROM videos';
+      this.db.run(query, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 }
 
 module.exports = new VideoModel();

@@ -76,6 +76,19 @@ class LinkModel {
       });
     });
   }
+
+  clearAllLinks() {
+    return new Promise((resolve, reject) => {
+      const query = 'DELETE FROM video_links';
+      this.db.run(query, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
 }
 
 module.exports = new LinkModel();

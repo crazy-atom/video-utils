@@ -39,8 +39,8 @@ Users can generate **temporary shareable links** for their videos with an **expi
 ### **1. Clone the Repository**
 Run the following command in your terminal:
 ```sh
-git clone https://github.com/crazy-atom/video-ops.git
-cd video-ops
+git clone https://github.com/crazy-atom/video-utils.git
+cd video-utils
 ```
 
 ### **2. Install Dependencies**

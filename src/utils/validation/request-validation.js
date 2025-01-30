@@ -14,4 +14,17 @@ const validateUploadRequest = (req) => {
   if (!file) throw new Error('No video file uploaded');
 };
 
-module.exports = { validateTrimRequest, validateMergeRequest, validateUploadRequest };
+const validateGenerateLinkRequest = (req) => {
+  if (!req.params.videoId) {
+    throw new Error('Missing videoId parameter.');
+  }
+
+  const { expiryHours } = req.body;
+  if (expiryHours !== undefined && (Number.isNaN(expiryHours) || expiryHours <= 0)) {
+    throw new Error('Invalid expiry time. It must be a positive number.');
+  }
+};
+
+module.exports = {
+  validateTrimRequest, validateMergeRequest, validateUploadRequest, validateGenerateLinkRequest,
+};

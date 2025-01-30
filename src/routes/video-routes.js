@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const videoController = require('../controllers/video-controller');
+const { generateLink } = require('../controllers/link-controller');
 
 const validateVideoUpload = require('../middleware/upload-middleware');
 
@@ -34,6 +35,11 @@ router.get(
 router.get(
   '/:videoId',
   videoController.getVideo,
+);
+
+router.post(
+  '/:videoId/links',
+  generateLink,
 );
 
 module.exports = router;

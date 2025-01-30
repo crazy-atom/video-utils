@@ -9,6 +9,7 @@ const errorMiddleware = require('./middleware/error-middleware');
 
 const healthRoute = require('./routes/health-route');
 const videoRoutes = require('./routes/video-routes');
+const linkRoutes = require('./routes/link-routes');
 
 const logger = require('./utils/logger');
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 
 app.use('/health', healthRoute);
 app.use('/videos', videoRoutes);
+app.use('/links', linkRoutes);
 
 app.use(errorMiddleware);
 
